@@ -416,6 +416,76 @@
       border: 1px solid rgba(255,255,255,0.1);
     }
 
+    /* ── DOCUMENTATION ── */
+    #docs { background: var(--bg-2); }
+    .docs-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px; margin-top: 64px;
+    }
+    .docs-card {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px 32px;
+      transition: border-color 0.3s, background 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .docs-card:hover { border-color: var(--border-bright); background: var(--bg-4); }
+    .docs-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    }
+    .docs-card.green::before {
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+    }
+    .docs-card.purple::before {
+      background: linear-gradient(90deg, transparent, var(--purple), transparent);
+    }
+    .docs-icon { font-size: 1.8rem; margin-bottom: 18px; display: block; }
+    .docs-card h3 {
+      font-size: 1rem; font-weight: 600; color: var(--white);
+      margin-bottom: 10px; letter-spacing: -0.3px;
+    }
+    .docs-card p { font-size: 0.86rem; color: var(--text-2); line-height: 1.65; }
+    .role-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+    .role-tag {
+      font-size: 0.72rem; font-weight: 500; color: var(--blue);
+      padding: 4px 10px; border-radius: 99px;
+      background: rgba(41,151,255,0.08);
+      border: 1px solid rgba(41,151,255,0.2);
+      letter-spacing: 0.2px;
+    }
+    .method-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+    .method-tag {
+      font-size: 0.72rem; font-weight: 500; color: var(--purple);
+      padding: 4px 10px; border-radius: 99px;
+      background: rgba(191,90,242,0.08);
+      border: 1px solid rgba(191,90,242,0.2);
+      letter-spacing: 0.2px;
+    }
+    .docs-callout {
+      margin-top: 24px;
+      background: linear-gradient(140deg, rgba(41,151,255,0.06) 0%, rgba(191,90,242,0.04) 100%);
+      border: 1px solid rgba(41,151,255,0.15);
+      border-radius: 20px; padding: 32px 36px;
+      display: flex; gap: 24px; align-items: center;
+    }
+    .docs-callout-icon {
+      font-size: 2rem;
+      width: 60px; height: 60px; min-width: 60px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(41,151,255,0.1);
+      border-radius: 16px;
+    }
+    .docs-callout h4 {
+      font-size: 1rem; font-weight: 600; color: var(--white);
+      margin-bottom: 6px; letter-spacing: -0.2px;
+    }
+    .docs-callout p { font-size: 0.88rem; color: var(--text-2); line-height: 1.6; }
+    @media (max-width: 900px) {
+      .docs-grid { grid-template-columns: 1fr; }
+      .docs-callout { flex-direction: column; text-align: center; gap: 16px; }
+    }
+
     /* ── AUDIENCES ── */
     #audiences { background: var(--bg); }
     .audience-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -569,6 +639,7 @@
       <a href="#problem">Problem</a>
       <a href="#features">Features</a>
       <a href="#how">How It Works</a>
+      <a href="#docs">Docs</a>
       <a href="#audiences">Who It's For</a>
       <a href="#journey">Journey</a>
       <a href="#waitlist" class="nav-cta">Join Waitlist</a>
@@ -832,6 +903,59 @@
     </div>
   </section>
 
+  <!-- DOCUMENTATION -->
+  <section id="docs">
+    <div class="section-inner">
+      <div class="fade-up">
+        <span class="eyebrow">Documentation & Support</span>
+        <h2>You're never building<br>without a guide.</h2>
+        <p class="section-desc">When you join a project, your role unlocks documentation tailored to what you actually do — plus team-wide best practices and proven methodologies. From kickoff to launch, you're never figuring it out alone.</p>
+      </div>
+
+      <div class="docs-grid fade-up">
+        <div class="docs-card">
+          <span class="docs-icon">📘</span>
+          <h3>Role-specific guides</h3>
+          <p>Every member gets documentation built for their role. Responsibilities, workflows, deliverables, and decision frameworks — all clear from day one.</p>
+          <div class="role-tags">
+            <span class="role-tag">Team Leader</span>
+            <span class="role-tag">Frontend Dev</span>
+            <span class="role-tag">Backend Dev</span>
+            <span class="role-tag">UI/UX Designer</span>
+            <span class="role-tag">QA</span>
+            <span class="role-tag">Marketing</span>
+          </div>
+        </div>
+
+        <div class="docs-card green">
+          <span class="docs-icon">⭐</span>
+          <h3>Team best practices</h3>
+          <p>Code review, communication, version control, testing, documentation standards — proven workflows distilled from real product teams, ready to apply.</p>
+        </div>
+
+        <div class="docs-card purple">
+          <span class="docs-icon">🔄</span>
+          <h3>Methodology frameworks</h3>
+          <p>Step-by-step playbooks for the major methodologies. Pick the one that fits your team — we provide the structure, ceremonies, and templates.</p>
+          <div class="method-tags">
+            <span class="method-tag">Agile</span>
+            <span class="method-tag">Scrum</span>
+            <span class="method-tag">Waterfall</span>
+            <span class="method-tag">Kanban</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="docs-callout fade-up">
+        <span class="docs-callout-icon">🎯</span>
+        <div>
+          <h4>Organizational support — from the ground up</h4>
+          <p>From your first kickoff meeting to final launch, GeekJoin walks your team through how to plan, execute, and ship like real professionals. No prior experience required.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- AUDIENCES -->
   <section id="audiences">
     <div class="section-inner">
@@ -1085,41 +1209,39 @@
       const tipClose = document.getElementById('jtip-close');
       let activeNode = null;
 
-      // Style nodes as clickable
+      // Tooltip is purely informational on hover — make it ignore pointer events
+      // and hide the close button (no longer needed)
+      tip.style.pointerEvents = 'none';
+      if (tipClose) tipClose.style.display = 'none';
+
+      let hideTimer = null;
+
       document.querySelectorAll('.jnode[data-tip]').forEach(node => {
-        node.style.cursor = 'pointer';
-        node.addEventListener('click', function(e) {
-          e.stopPropagation();
-          if (activeNode === this) { closeTip(); return; }
+        node.addEventListener('mouseenter', function() {
+          if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+          if (activeNode === this) return;
           activeNode = this;
           tipTitle.innerHTML = this.dataset.tip;
           tipBody.textContent = this.dataset.body;
-          // Show first so we can measure height
           tip.style.opacity = '0';
           tip.style.transform = 'scale(0.95)';
           tip.style.display = 'block';
           positionTip(this);
-          // Animate in
           requestAnimationFrame(() => {
             tip.style.transition = 'opacity 0.18s, transform 0.18s';
             tip.style.opacity = '1';
             tip.style.transform = 'scale(1)';
           });
         });
-      });
 
-      tipClose.addEventListener('click', closeTip);
-      document.addEventListener('click', function(e) {
-        if (!tip.contains(e.target)) closeTip();
-      });
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeTip();
+        node.addEventListener('mouseleave', closeTip);
       });
 
       function closeTip() {
         tip.style.opacity = '0';
         tip.style.transform = 'scale(0.95)';
-        setTimeout(() => { tip.style.display = 'none'; }, 180);
+        if (hideTimer) clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => { tip.style.display = 'none'; }, 180);
         activeNode = null;
       }
 
