@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamUp — Build Together. Get Discovered.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #4F6EF7;
+      --primary-dark: #3752d3;
+      --primary-light: #eef1fe;
+      --accent: #22c55e;
+      --accent-dark: #16a34a;
+      --dark: #0f172a;
+      --dark-2: #1e293b;
+      --mid: #475569;
+      --light: #94a3b8;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --radius: 14px;
+      --shadow: 0 4px 24px rgba(79,110,247,0.10);
+      --shadow-lg: 0 12px 48px rgba(79,110,247,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5%;
+      height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 1.4rem; font-weight: 800; color: var(--primary);
+      letter-spacing: -0.5px; text-decoration: none;
+    }
+    .nav-logo span { color: var(--dark); }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      text-decoration: none; color: var(--mid);
+      font-size: 0.95rem; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-cta {
+      background: var(--primary); color: var(--white) !important;
+      padding: 9px 22px; border-radius: 8px;
+      font-weight: 600 !important;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--primary-dark) !important; color: var(--white) !important; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 5% 80px;
+      background: linear-gradient(160deg, #f0f4ff 0%, #f8fafc 60%, #f0fdf4 100%);
+      position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 700px 500px at 20% 40%, rgba(79,110,247,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 600px 400px at 80% 60%, rgba(34,197,94,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; max-width: 800px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--primary-light); color: var(--primary);
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px;
+      padding: 6px 16px; border-radius: 99px;
+      margin-bottom: 28px; text-transform: uppercase;
+    }
+    .hero-badge span { width: 7px; height: 7px; background: var(--primary); border-radius: 50%; display: inline-block; }
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--dark);
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+    }
+    h1 .highlight { color: var(--primary); }
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--mid);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--primary); color: var(--white);
+      padding: 14px 32px; border-radius: 10px;
+      font-size: 1rem; font-weight: 700;
+      text-decoration: none; display: inline-block;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(79,110,247,0.3);
+    }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(79,110,247,0.35); }
+    .btn-secondary {
+      background: var(--white); color: var(--primary);
+      padding: 14px 32px; border-radius: 10px;
+      font-size: 1rem; font-weight: 700;
+      text-decoration: none; display: inline-block;
+      border: 2px solid var(--primary);
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-secondary:hover { background: var(--primary-light); transform: translateY(-2px); }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 48px;
+      margin-top: 64px; flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+    .stat-label { font-size: 0.85rem; color: var(--light); font-weight: 500; margin-top: 2px; }
+
+    /* ── SECTIONS ── */
+    section { padding: 96px 5%; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--primary);
+      margin-bottom: 12px;
+    }
+    h2 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800; letter-spacing: -1px;
+      color: var(--dark); margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .section-desc {
+      font-size: 1.05rem; color: var(--mid);
+      max-width: 620px; line-height: 1.75;
+    }
+    .section-head { margin-bottom: 56px; }
+
+    /* ── PROBLEM ── */
+    #problem { background: var(--white); }
+    .problem-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 28px; margin-top: 48px;
+    }
+    .problem-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      position: relative; overflow: hidden;
+    }
+    .problem-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: #ef4444;
+    }
+    .problem-icon {
+      font-size: 2rem; margin-bottom: 16px;
+    }
+    .problem-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
+    .problem-card p { font-size: 0.92rem; color: var(--mid); line-height: 1.6; }
+
+    /* ── SOLUTION ── */
+    #solution { background: var(--bg); }
+    .solution-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 48px; align-items: center;
+    }
+    .solution-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+    .solution-list li {
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .solution-list .check {
+      width: 28px; height: 28px; min-width: 28px;
+      background: #dcfce7; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; margin-top: 2px;
+    }
+    .solution-list li h4 { font-size: 0.97rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+    .solution-list li p { font-size: 0.88rem; color: var(--mid); line-height: 1.55; }
+    .solution-visual {
+      background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+      border-radius: 20px;
+      padding: 40px 36px;
+      color: var(--white);
+      box-shadow: var(--shadow-lg);
+    }
+    .solution-visual h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 24px; opacity: 0.9; }
+    .mock-project {
+      background: rgba(255,255,255,0.12);
+      border-radius: 12px; padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+    .mock-title { font-weight: 700; font-size: 1rem; margin-bottom: 10px; }
+    .mock-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .mock-tag {
+      background: rgba(255,255,255,0.18); font-size: 0.72rem;
+      padding: 4px 10px; border-radius: 99px; font-weight: 600;
+    }
+    .mock-progress-label { font-size: 0.78rem; opacity: 0.75; margin-bottom: 6px; }
+    .mock-bar { background: rgba(255,255,255,0.2); border-radius: 99px; height: 8px; }
+    .mock-bar-fill { background: #4ade80; border-radius: 99px; height: 8px; width: 65%; }
+    .mock-members { display: flex; gap: 8px; margin-top: 16px; align-items: center; }
+    .mock-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700;
+      border: 2px solid rgba(255,255,255,0.4);
+    }
+    .mock-member-label { font-size: 0.78rem; opacity: 0.75; margin-left: 4px; }
+
+    /* ── FEATURES ── */
+    #features { background: var(--white); }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { box-shadow: var(--shadow); transform: translateY(-4px); }
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: var(--primary-light); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 20px;
+    }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
+    .feature-card p { font-size: 0.88rem; color: var(--mid); line-height: 1.6; }
+
+    /* ── HOW IT WORKS ── */
+    #how { background: var(--bg); }
+    .steps { display: flex; flex-direction: column; gap: 0; position: relative; max-width: 700px; }
+    .steps::before {
+      content: ''; position: absolute;
+      left: 23px; top: 12px; bottom: 12px; width: 2px;
+      background: linear-gradient(to bottom, var(--primary), var(--accent));
+    }
+    .step {
+      display: flex; gap: 24px; align-items: flex-start;
+      padding: 0 0 40px 0; position: relative;
+    }
+    .step:last-child { padding-bottom: 0; }
+    .step-num {
+      width: 48px; height: 48px; min-width: 48px;
+      background: var(--primary); color: var(--white);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 800;
+      position: relative; z-index: 1;
+      box-shadow: 0 0 0 4px var(--bg);
+    }
+    .step-body { padding-top: 10px; }
+    .step-body h3 { font-size: 1.05rem; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+    .step-body p { font-size: 0.9rem; color: var(--mid); line-height: 1.65; }
+
+    /* ── FOR / SPLIT ── */
+    #audiences { background: var(--white); }
+    .audience-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .audience-card {
+      border-radius: 20px; padding: 40px 36px;
+      position: relative; overflow: hidden;
+    }
+    .audience-card.students {
+      background: linear-gradient(140deg, #eef1fe 0%, #dbeafe 100%);
+      border: 1px solid #c7d2fe;
+    }
+    .audience-card.companies {
+      background: linear-gradient(140deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 1px solid #bbf7d0;
+    }
+    .audience-label {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 8px;
+    }
+    .audience-card.students .audience-label { color: var(--primary); }
+    .audience-card.companies .audience-label { color: var(--accent-dark); }
+    .audience-card h3 { font-size: 1.4rem; font-weight: 800; color: var(--dark); margin-bottom: 20px; }
+    .audience-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .audience-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 0.92rem; color: var(--dark-2); line-height: 1.5; }
+    .audience-list .dot {
+      width: 20px; height: 20px; min-width: 20px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; margin-top: 2px;
+    }
+    .students .dot { background: #c7d2fe; color: var(--primary-dark); }
+    .companies .dot { background: #bbf7d0; color: var(--accent-dark); }
+
+    /* ── DIFFERENTIATORS ── */
+    #different { background: var(--dark); color: var(--white); }
+    #different h2 { color: var(--white); }
+    #different .section-desc { color: #94a3b8; }
+    .diff-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px; margin-top: 48px;
+    }
+    .diff-card {
+      background: var(--dark-2); border: 1px solid #334155;
+      border-radius: var(--radius); padding: 32px 28px;
+      transition: border-color 0.2s;
+    }
+    .diff-card:hover { border-color: var(--primary); }
+    .diff-card .icon { font-size: 2rem; margin-bottom: 16px; }
+    .diff-card h3 { font-size: 0.97rem; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+    .diff-card p { font-size: 0.87rem; color: #94a3b8; line-height: 1.6; }
+
+    /* ── WAITLIST ── */
+    #waitlist {
+      background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+      color: var(--white); text-align: center;
+    }
+    #waitlist h2 { color: var(--white); }
+    #waitlist .section-desc { color: rgba(255,255,255,0.8); max-width: 500px; margin: 0 auto 48px; }
+    .tally-wrapper { max-width: 520px; margin: 0 auto; }
+    .waitlist-note { font-size: 0.82rem; color: rgba(255,255,255,0.65); margin-top: 16px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark); color: #64748b;
+      padding: 40px 5%; text-align: center;
+      font-size: 0.88rem;
+    }
+    footer .footer-logo {
+      font-size: 1.2rem; font-weight: 800;
+      color: var(--primary); margin-bottom: 12px;
+      display: block;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .solution-grid, .audience-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hero-stats { gap: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">Team<span>Up</span></a>
+    <div class="nav-links">
+      <a href="#problem">The Problem</a>
+      <a href="#features">Features</a>
+      <a href="#how">How It Works</a>
+      <a href="#audiences">Who It's For</a>
+      <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-badge"><span></span> Now in early development</div>
+      <h1>Build Together.<br><span class="highlight">Get Discovered.</span></h1>
+      <p class="hero-sub">
+        TeamUp is a collaborative platform where students and aspiring professionals
+        create real projects, develop structured teamwork skills, and get noticed
+        by companies — based on actual work, not polished resumes.
+      </p>
+      <div class="hero-btns">
+        <a href="#waitlist" class="btn-primary">Join the Waitlist</a>
+        <a href="#how" class="btn-secondary">See How It Works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Real project experience</div></div>
+        <div class="stat"><div class="stat-num">0</div><div class="stat-label">Resume fluff needed</div></div>
+        <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Skills to explore</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section id="problem">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-label">The Problem</div>
+        <h2>There's a gap between<br>learning and employment.</h2>
+        <p class="section-desc">
+          Students graduate with theory but no real project experience.
+          Companies struggle to judge candidates from interviews alone.
+          Something needs to bridge that gap.
+        </p>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="problem-icon">🎓</div>
+          <h3>Students lack real experience</h3>
+          <p>Academic projects don't reflect real-world teamwork, deadlines, documentation, or product thinking. Graduates struggle to prove what they can actually do.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">📄</div>
+          <h3>Resumes don't tell the whole story</h3>
+          <p>A polished CV can't capture how someone collaborates, solves problems under pressure, or grows over time. Hiring based on resumes is a gamble.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">🔍</div>
+          <h3>Talent is hard to discover</h3>
+          <p>Exceptional beginners and motivated students go unnoticed because they don't have the right network or portfolio to reach companies on their own.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section id="solution">
+    <div class="section-inner">
+      <div class="solution-grid">
+        <div>
+          <div class="section-label">The Solution</div>
+          <h2>A structured environment<br>for real teamwork.</h2>
+          <p class="section-desc" style="margin-bottom: 36px;">
+            TeamUp bridges the gap by giving students a platform to build and document real projects — while making their progress visible to the companies that matter.
+          </p>
+          <ul class="solution-list">
+            <li>
+              <div class="check">✓</div>
+              <div>
+                <h4>Create or join collaborative projects</h4>
+                <p>Have an idea? Post it. Want to contribute? Browse open projects and request to join based on your skills.</p>
+              </div>
+            </li>
+            <li>
+              <div class="check">✓</div>
+              <div>
+                <h4>Define roles and milestones</h4>
+                <p>Assign structured roles like Frontend Dev, QA, Marketing, or UI/UX. Set deadlines and track real progress.</p>
+              </div>
+            </li>
+            <li>
+              <div class="check">✓</div>
+              <div>
+                <h4>Document the full journey</h4>
+                <p>Planning, testing, security reviews, documentation — all logged and visible, showing how your team thinks and executes.</p>
+              </div>
+            </li>
+            <li>
+              <div class="check">✓</div>
+              <div>
+                <h4>Get seen by companies</h4>
+                <p>Organizations silently observe projects that interest them — and reach out when they spot talent they want on their team.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <div class="solution-visual">
+            <h3>🚀 Active Project</h3>
+            <div class="mock-project">
+              <div class="mock-title">FinTrack — Personal Finance App</div>
+              <div class="mock-tags">
+                <span class="mock-tag">Frontend</span>
+                <span class="mock-tag">Backend</span>
+                <span class="mock-tag">UI/UX</span>
+                <span class="mock-tag">Active</span>
+              </div>
+              <div class="mock-progress-label">Overall Progress</div>
+              <div class="mock-bar"><div class="mock-bar-fill"></div></div>
+              <div class="mock-members">
+                <div class="mock-avatar" style="background:#a5b4fc">JM</div>
+                <div class="mock-avatar" style="background:#6ee7b7">SR</div>
+                <div class="mock-avatar" style="background:#fca5a5">KL</div>
+                <div class="mock-avatar" style="background:#fde68a">+2</div>
+                <span class="mock-member-label">5 contributors</span>
+              </div>
+            </div>
+            <div style="margin-top: 20px; font-size: 0.8rem; opacity: 0.75; line-height: 1.5;">
+              👁 3 companies currently observing this project
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-label">Features</div>
+        <h2>Everything a real team needs.</h2>
+        <p class="section-desc">
+          TeamUp isn't just a project board. It's a full collaboration environment built around growth, visibility, and structured execution.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🧑‍🤝‍🧑</div>
+          <h3>Structured Team Roles</h3>
+          <p>Assign roles like Product Lead, Frontend Dev, UI/UX Designer, QA Engineer, or Marketing. Everyone knows their responsibilities from day one.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Contribution Tracking</h3>
+          <p>Track tasks completed, discussions, milestones hit, and overall participation. Every member's effort is visible and measurable.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Public & Private Projects</h3>
+          <p>Keep your project private while building it, or open it up for community feedback. You choose who can see your work and when.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏆</div>
+          <h3>Skill Endorsements</h3>
+          <p>Team members can endorse each other based on real collaboration, adding credibility to every contributor's profile.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3>Milestones & Deadlines</h3>
+          <p>Plan with Agile, Scrum, or Waterfall. Set milestones, assign deadlines, and keep your project on track from start to finish.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🕵️</div>
+          <h3>Company Observer Mode</h3>
+          <p>Companies quietly follow projects that interest them, watching real work unfold before reaching out — making discovery feel natural, not transactional.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Public Project Timeline</h3>
+          <p>Every milestone, commit, and decision is logged on a public timeline — showing growth over time, not just a final result.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Business Pipeline</h3>
+          <p>Showcase your completed projects directly to potential employers or clients through TeamUp's business pipeline feature.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⭐</div>
+          <h3>Peer Reviews</h3>
+          <p>Team members review each other at the end of a project, providing honest feedback that builds professional accountability.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-label">How It Works</div>
+        <h2>From idea to opportunity<br>in four steps.</h2>
+        <p class="section-desc">
+          Whether you're a builder with an idea or a contributor looking to grow, TeamUp makes the path forward clear.
+        </p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Create or join a project</h3>
+            <p>Post your app idea and define the roles you need — or browse active projects and request to join based on your skills. You can focus on what you love while collaborating on the parts you want to learn.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Build with structure</h3>
+            <p>Set up milestones, assign tasks, and work through the full development process — planning, implementation, testing, documentation, security reviews, and more. Real teamwork, real practices.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Document your progress publicly</h3>
+            <p>Every step of your project is logged on a transparent timeline. Your contributions, decisions, and growth become a living portfolio that tells your story far better than any resume.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h3>Get discovered by companies</h3>
+            <p>Companies browse and observe active projects on TeamUp. When they spot talent they want — whether that's you or your whole team — they reach out directly. Your work does the talking.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IT'S FOR -->
+  <section id="audiences">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-label">Who It's For</div>
+        <h2>Built for two sides<br>of the same table.</h2>
+      </div>
+      <div class="audience-grid">
+        <div class="audience-card students">
+          <div class="audience-label">For Students & Beginners</div>
+          <h3>Build your career<br>from the ground up.</h3>
+          <ul class="audience-list">
+            <li><div class="dot">✓</div><span>Gain real teamwork and project management experience before entering the job market</span></li>
+            <li><div class="dot">✓</div><span>Learn professional methodologies — Agile, Scrum, Waterfall — in a real project context</span></li>
+            <li><div class="dot">✓</div><span>Build a verifiable portfolio grounded in actual contributions, not side project screenshots</span></li>
+            <li><div class="dot">✓</div><span>Get noticed by companies based on how you work, not just what you claim on paper</span></li>
+            <li><div class="dot">✓</div><span>Connect with like-minded people who want to build and grow together</span></li>
+          </ul>
+        </div>
+        <div class="audience-card companies">
+          <div class="audience-label">For Companies & Recruiters</div>
+          <h3>See real talent<br>in action.</h3>
+          <ul class="audience-list">
+            <li><div class="dot">✓</div><span>Observe real projects and evaluate candidates based on actual contributions, not curated resumes</span></li>
+            <li><div class="dot">✓</div><span>Assess collaboration style, work ethic, and technical growth over time</span></li>
+            <li><div class="dot">✓</div><span>Discover motivated, team-ready talent before they hit the traditional job market</span></li>
+            <li><div class="dot">✓</div><span>Reach out directly to individuals or entire teams that impress you</span></li>
+            <li><div class="dot">✓</div><span>Build a smarter, more reliable hiring pipeline based on demonstrated performance</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIFFERENTIATORS -->
+  <section id="different">
+    <div class="section-inner">
+      <div class="section-label" style="color:#818cf8">What Makes TeamUp Different</div>
+      <h2>Not just another platform.</h2>
+      <p class="section-desc">
+        GitHub shows code. LinkedIn shows claims. TeamUp shows the full picture — how people think, collaborate, and grow through real project work.
+      </p>
+      <div class="diff-grid">
+        <div class="diff-card">
+          <div class="icon">🗺️</div>
+          <h3>Full Development Journey</h3>
+          <p>From the first idea to final deployment — planning, testing, security, and everything in between is documented and visible.</p>
+        </div>
+        <div class="diff-card">
+          <div class="icon">🤝</div>
+          <h3>Structured Collaboration</h3>
+          <p>Defined roles, real deadlines, and professional workflows teach you how to work on a team — not just code in isolation.</p>
+        </div>
+        <div class="diff-card">
+          <div class="icon">🔎</div>
+          <h3>Transparent Progress</h3>
+          <p>Every contribution is tracked publicly. No hiding behind a team — your individual impact is always visible and credited.</p>
+        </div>
+        <div class="diff-card">
+          <div class="icon">🏢</div>
+          <h3>Company Discovery</h3>
+          <p>Companies don't just post jobs — they watch projects unfold and reach out to people they genuinely want to hire.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAITLIST -->
+  <section id="waitlist">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label" style="color:rgba(255,255,255,0.7)">Early Access</div>
+      <h2>Start building.<br>Start getting noticed.</h2>
+      <p class="section-desc">
+        TeamUp is currently in development. Join the waitlist to be among the first to access the platform and shape its future.
+      </p>
+
+      <!-- ✅ TALLY FORM EMBED -->
+      <div class="tally-wrapper">
+        <iframe
+          data-tally-src="https://tally.so/embed/rj2D5l?alignLeft=0&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+          loading="lazy"
+          width="100%"
+          height="180"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          title="TeamUp Waitlist"
+          style="border-radius: 12px; max-width: 520px; margin: 0 auto; display: block;"
+        ></iframe>
+        <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+      </div>
+
+      <p class="waitlist-note" style="margin-top:20px;">No spam. No nonsense. Just early access when we launch.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo">TeamUp</span>
+    Build Together. Grow Together. Get Noticed.<br><br>
+    &copy; 2026 TeamUp. All rights reserved.
+  </footer>
+
+  <script>
+    // Smooth active nav link highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => {
+        if (window.scrollY >= sec.offsetTop - 120) current = sec.id;
+      });
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--primary)' : '';
+      });
+    });
+  </script>
+</body>
+</html>
