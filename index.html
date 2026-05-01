@@ -291,6 +291,94 @@
     }
     .problem-card p { font-size: 0.88rem; color: var(--text-2); line-height: 1.65; }
 
+    /* ── WHY / FOUNDER STORY ── */
+    #why {
+      background: var(--bg);
+      padding: 120px 5%;
+      position: relative; overflow: hidden;
+    }
+    #why::before {
+      content: '';
+      position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(41,151,255,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .why-inner {
+      max-width: 720px; margin: 0 auto;
+      position: relative;
+      text-align: center;
+    }
+    .why-mark {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 116px; height: 116px;
+      border-radius: 50%;
+      position: relative;
+      background:
+        radial-gradient(circle at 30% 28%, rgba(255,255,255,0.08) 0%, transparent 55%),
+        linear-gradient(135deg, rgba(41,151,255,0.22) 0%, rgba(191,90,242,0.10) 100%);
+      border: 1px solid rgba(41,151,255,0.4);
+      box-shadow:
+        0 0 0 1px rgba(41,151,255,0.08),
+        0 0 60px rgba(41,151,255,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+      margin-bottom: 32px;
+    }
+    .why-mark::after {
+      content: '';
+      position: absolute; inset: 7px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.05);
+      pointer-events: none;
+    }
+    .why-mark-text {
+      font-size: 2rem; font-weight: 800;
+      letter-spacing: -1.2px;
+      line-height: 1;
+      background: linear-gradient(135deg, #ffffff 20%, #2997ff 80%, #bf5af2 110%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative; z-index: 1;
+    }
+    #why h2 { margin-bottom: 32px; }
+    .why-story {
+      text-align: left;
+      font-size: 1.05rem;
+      color: var(--text-2);
+      line-height: 1.85;
+      font-weight: 300;
+    }
+    .why-story p { margin-bottom: 22px; }
+    .why-story p:last-child { margin-bottom: 0; }
+    .why-story strong {
+      color: var(--text); font-weight: 500;
+    }
+    .why-signature {
+      margin-top: 40px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 14px;
+      justify-content: flex-start;
+    }
+    .why-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2997ff, #bf5af2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-weight: 700; font-size: 0.95rem;
+      letter-spacing: -0.3px;
+    }
+    .why-signature-text { text-align: left; }
+    .why-signature-name {
+      font-size: 0.95rem; font-weight: 600; color: var(--white);
+      letter-spacing: -0.2px;
+    }
+    .why-signature-role {
+      font-size: 0.82rem; color: var(--text-3);
+      margin-top: 2px;
+    }
+
     /* ── SOLUTION / PHOTO FEATURE ── */
     #solution { background: var(--bg); }
     .solution-split {
@@ -824,6 +912,30 @@
           <span class="p-icon">🔍</span>
           <h3>Junior dev talent stays invisible</h3>
           <p>Talented junior developers and designers go unnoticed because they don't have the network, portfolio, or shipped products to reach tech recruiters yet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY / FOUNDER STORY -->
+  <section id="why">
+    <div class="why-inner fade-up">
+      <div class="why-mark"><span class="why-mark-text">Why?</span></div>
+      <h2>Built by a student.<br>For students who want more.</h2>
+
+      <div class="why-story">
+        <p>I started GeekJoin because <strong>I lived the gap</strong>.</p>
+        <p>I studied Robotics Engineering and taught myself programming on the side. But theory and solo tutorials only got me so far — I wanted to <strong>build something real with my own hands</strong>, with a clear purpose, alongside people who could push me forward. Working alone, without direction, wasn't teaching me what I actually needed to become a good engineer.</p>
+        <p>When I looked at my CV, I saw coursework no recruiter cared about. I couldn't talk confidently in interviews because I had no shipped products, no team workflows, no real story to tell. I wanted a platform where I could <strong>build real things with real teams</strong>, learn how engineering actually works, and let companies see how I think — not just what my CV claimed.</p>
+        <p>The second reason is connection. Students all over the world are studying the same subjects, but learning them in completely different ways — different perspectives, different mindsets, different solutions to the same problem. A platform that brings <strong>motivated builders together across countries and backgrounds</strong> creates the kind of shared learning a single university simply can't. And it gives companies a window into talent they'd never otherwise reach.</p>
+        <p>GeekJoin is the platform I needed when I started. <strong>I'm building it so the next generation of developers doesn't have to start from zero.</strong></p>
+      </div>
+
+      <div class="why-signature">
+        <div class="why-avatar">MM</div>
+        <div class="why-signature-text">
+          <div class="why-signature-name">Mark Mirza</div>
+          <div class="why-signature-role">Founder, GeekJoin</div>
         </div>
       </div>
     </div>
