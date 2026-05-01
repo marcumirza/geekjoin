@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GeekJoin — Build Together. Get Discovered.</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='6' y='10' width='52' height='36' rx='4' fill='%232997ff'/><rect x='10' y='14' width='44' height='28' rx='2' fill='%230a0a0a'/><rect x='14' y='20' width='16' height='2' rx='1' fill='%2330d158'/><rect x='14' y='25' width='24' height='2' rx='1' fill='%23bf5af2'/><rect x='14' y='30' width='12' height='2' rx='1' fill='%232997ff'/><rect x='28' y='46' width='8' height='6' fill='%232997ff'/><rect x='18' y='52' width='28' height='4' rx='2' fill='%232997ff'/></svg>">
+  <title>GeekJoin — Build Software Together. Get Discovered by Tech Companies.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -69,6 +70,43 @@
       transition: opacity 0.2s !important;
     }
     .nav-cta:hover { opacity: 0.85 !important; }
+
+    /* ── HAMBURGER BUTTON ── */
+    .nav-burger {
+      display: none;
+      background: transparent; border: none; cursor: pointer;
+      width: 36px; height: 36px;
+      padding: 8px; margin: 0;
+      flex-direction: column; justify-content: center;
+      gap: 5px; align-items: center;
+    }
+    .nav-burger span {
+      display: block;
+      width: 20px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.2s ease;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── MOBILE NAV BACKDROP ── */
+    .nav-backdrop {
+      display: none;
+      position: fixed; inset: 52px 0 0 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 90;
+      pointer-events: none;
+    }
+    .nav-backdrop.open {
+      display: block;
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     /* ── HERO ── */
     #hero {
@@ -599,13 +637,69 @@
       .story-cell.span2 { grid-column: span 1; }
     }
     @media (max-width: 600px) {
-      .nav-links { display: none; }
+      .nav-burger { display: flex; }
+      .nav-links {
+        display: flex !important;
+        position: fixed; top: 52px; right: 0;
+        width: min(280px, 80vw);
+        height: calc(100vh - 52px);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+        padding: 32px 28px;
+        background: rgba(10,10,10,0.96);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-left: 1px solid var(--border);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 99;
+        overflow-y: auto;
+      }
+      .nav-links.open { transform: translateX(0); }
+      .nav-links a {
+        font-size: 1rem; width: 100%;
+        padding: 6px 0;
+      }
+      .nav-links .nav-cta {
+        width: 100%;
+        margin-top: 12px;
+        padding: 12px 24px !important;
+        text-align: center;
+        font-size: 0.95rem !important;
+        border-radius: 999px;
+      }
       .hero-photos { grid-template-columns: 1fr; }
       .hero-photo-2 { display: none; }
       .problem-grid, .how-grid { grid-template-columns: 1fr; }
       .bento { grid-template-columns: 1fr; }
       .diff-grid { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: 1fr; }
+
+      /* Journey map — fit on mobile */
+      .jrow-2, .jfork-2, .jmerge-2 { width: 100% !important; }
+      .jrow-3, .jfork-3, .jmerge-3 { width: 100% !important; }
+
+      /* 3-card row becomes a pyramid: Timeline on top, Agile + Skills below */
+      .jrow-3 {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-areas: 'top top' 'left right' !important;
+        gap: 10px !important;
+      }
+      .jrow-3 > :nth-child(1) {
+        grid-area: top;
+        width: calc(50% - 5px);
+        justify-self: center;
+      }
+      .jrow-3 > :nth-child(2) { grid-area: left; }
+      .jrow-3 > :nth-child(3) { grid-area: right; }
+
+      /* Hide cross-line decorations for the 3-card fork/merge — they don't align with the pyramid */
+      .jfork-3 .hbar, .jfork-3 .drop,
+      .jmerge-3 .hbar, .jmerge-3 .rise {
+        display: none !important;
+      }
     }
 
     /* ── FADE IN ANIMATION ── */
@@ -635,7 +729,7 @@
   <!-- NAV -->
   <nav>
     <a class="nav-logo" href="#">Geek<span class="dot">Join</span></a>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="#problem">Problem</a>
       <a href="#features">Features</a>
       <a href="#how">How It Works</a>
@@ -644,15 +738,19 @@
       <a href="#journey">Journey</a>
       <a href="#waitlist" class="nav-cta">Join Waitlist</a>
     </div>
+    <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="nav-backdrop" id="navBackdrop"></div>
 
   <!-- HERO -->
   <section id="hero">
     <div class="hero-glow"></div>
-    <div class="hero-eyebrow"><span class="pulse"></span> Now in early development</div>
-    <h1>Build Together.<br><span class="hero-grad">Get Discovered.</span></h1>
+    <div class="hero-eyebrow"><span class="pulse"></span> For builders, devs &amp; tech students — now in early development</div>
+    <h1>Build Software Together.<br><span class="hero-grad">Get Discovered.</span></h1>
     <p class="hero-sub">
-      GeekJoin is the platform where students and aspiring professionals collaborate on real projects, develop structured skills, and get noticed by companies — based on actual work, not polished resumes.
+      GeekJoin is the platform where Computer Science students, developers, and aspiring tech professionals team up on real software projects — apps, web platforms, and tools — to build verifiable skills and get noticed by tech companies based on actual code, not polished resumes.
     </p>
     <div class="hero-btns">
       <a href="#waitlist" class="btn-blue">Join the Waitlist</a>
@@ -685,19 +783,19 @@
       <div class="stats-grid">
         <div class="stat-item">
           <div class="stat-num"><span class="unit">#</span>1</div>
-          <div class="stat-label">Way to show real work</div>
+          <div class="stat-label">Way to show real shipped code</div>
         </div>
         <div class="stat-item">
           <div class="stat-num">100<span class="unit">%</span></div>
-          <div class="stat-label">Real project experience</div>
+          <div class="stat-label">Real software project experience</div>
         </div>
         <div class="stat-item">
           <div class="stat-num">0</div>
-          <div class="stat-label">Resume fluff needed</div>
+          <div class="stat-label">CV fluff or LeetCode grinding</div>
         </div>
         <div class="stat-item">
           <div class="stat-num">∞</div>
-          <div class="stat-label">Skills to discover</div>
+          <div class="stat-label">Tech stacks to explore</div>
         </div>
       </div>
     </div>
@@ -708,24 +806,24 @@
     <div class="section-inner">
       <div class="fade-up">
         <span class="eyebrow">The Problem</span>
-        <h2>There's a gap between<br>learning and employment.</h2>
-        <p class="section-desc">Students graduate with theory but no real project experience. Companies struggle to judge candidates from interviews alone.</p>
+        <h2>There's a gap between<br>university and tech jobs.</h2>
+        <p class="section-desc">Tech and engineering students graduate with theory but no real shipping experience. Tech companies struggle to evaluate junior developers from interviews and CVs alone.</p>
       </div>
       <div class="problem-grid fade-up">
         <div class="problem-card">
           <span class="p-icon">🎓</span>
-          <h3>Students lack real experience</h3>
-          <p>Academic projects don't reflect real-world teamwork, deadlines, or product thinking. Graduates struggle to prove what they can actually do.</p>
+          <h3>Students lack shipping experience</h3>
+          <p>University coursework rarely reflects how real software teams work — sprints, code review, deployments, debugging in production. Graduates struggle to prove they can actually build and ship.</p>
         </div>
         <div class="problem-card">
           <span class="p-icon">📄</span>
-          <h3>Resumes don't tell the story</h3>
-          <p>A polished CV can't show how someone collaborates, solves problems under pressure, or grows through setbacks. Hiring on resumes is a gamble.</p>
+          <h3>Resumes &amp; GitHub don't tell the full story</h3>
+          <p>A CV lists tech stacks. A GitHub shows commits. Neither shows how a developer collaborates, debugs under pressure, or contributes to a real product team.</p>
         </div>
         <div class="problem-card">
           <span class="p-icon">🔍</span>
-          <h3>Talent stays invisible</h3>
-          <p>Exceptional beginners go unnoticed because they don't have the network or portfolio to reach companies — yet.</p>
+          <h3>Junior dev talent stays invisible</h3>
+          <p>Talented junior developers and designers go unnoticed because they don't have the network, portfolio, or shipped products to reach tech recruiters yet.</p>
         </div>
       </div>
     </div>
@@ -757,8 +855,8 @@
         </div>
         <div class="solution-content fade-up">
           <span class="eyebrow">The Solution</span>
-          <h2>A structured environment for real teamwork.</h2>
-          <p class="section-desc">GeekJoin bridges the gap — giving students a place to build real projects while making their progress visible to the companies that matter.</p>
+          <h2>A structured environment for real software teams.</h2>
+          <p class="section-desc">GeekJoin bridges the gap — giving developers, designers, and PMs a place to build real apps and web products together, while making their engineering work visible to tech companies that matter.</p>
           <ul class="check-list">
             <li>
               <div class="check-icon blue">🤝</div>
@@ -965,25 +1063,25 @@
       </div>
       <div class="audience-grid fade-up">
         <div class="aud-card students">
-          <span class="aud-label">For Students & Beginners</span>
-          <h3>Build your career<br>from the ground up.</h3>
+          <span class="aud-label">For Computer Science Students &amp; Junior Devs</span>
+          <h3>Build your tech career<br>from the ground up.</h3>
           <ul class="aud-list">
-            <li><div class="aud-dot">✓</div><span>Gain real teamwork and project management experience before the job market</span></li>
-            <li><div class="aud-dot">✓</div><span>Learn Agile, Scrum, and Waterfall in a real project context, not just theory</span></li>
-            <li><div class="aud-dot">✓</div><span>Build a verifiable portfolio grounded in actual contributions, not screenshots</span></li>
-            <li><div class="aud-dot">✓</div><span>Get noticed by companies based on how you work, not what you claim</span></li>
-            <li><div class="aud-dot">✓</div><span>Connect with like-minded people who want to build and grow together</span></li>
+            <li><div class="aud-dot">✓</div><span>Ship real software in a team — not toy university projects</span></li>
+            <li><div class="aud-dot">✓</div><span>Learn Agile, Scrum, code review, and version control in a real product context</span></li>
+            <li><div class="aud-dot">✓</div><span>Build a verifiable dev portfolio grounded in actual code &amp; collaboration, not just GitHub stars</span></li>
+            <li><div class="aud-dot">✓</div><span>Get noticed by tech companies based on how you build, not what your CV claims</span></li>
+            <li><div class="aud-dot">✓</div><span>Connect with other developers, designers &amp; PMs who want to build and grow together</span></li>
           </ul>
         </div>
         <div class="aud-card companies">
-          <span class="aud-label">For Companies & Recruiters</span>
-          <h3>See real talent<br>in action.</h3>
+          <span class="aud-label">For Tech Companies &amp; Recruiters</span>
+          <h3>See real engineering<br>talent in action.</h3>
           <ul class="aud-list">
-            <li><div class="aud-dot">✓</div><span>Evaluate candidates on actual contributions — not curated resumes or rehearsed interviews</span></li>
-            <li><div class="aud-dot">✓</div><span>Assess collaboration style, work ethic, and technical growth over time</span></li>
-            <li><div class="aud-dot">✓</div><span>Discover motivated, team-ready talent before they hit the traditional job market</span></li>
-            <li><div class="aud-dot">✓</div><span>Reach out to individuals or entire teams that genuinely impress you</span></li>
-            <li><div class="aud-dot">✓</div><span>Build a smarter hiring pipeline based on demonstrated performance</span></li>
+            <li><div class="aud-dot">✓</div><span>Evaluate junior devs on actual shipped code — not curated CVs or rehearsed coding interviews</span></li>
+            <li><div class="aud-dot">✓</div><span>Assess collaboration style, code quality, and technical growth over real sprints</span></li>
+            <li><div class="aud-dot">✓</div><span>Discover motivated, team-ready engineering talent before they hit the traditional tech job market</span></li>
+            <li><div class="aud-dot">✓</div><span>Reach out to individual developers or entire product teams that genuinely impress you</span></li>
+            <li><div class="aud-dot">✓</div><span>Build a smarter tech hiring pipeline based on demonstrated engineering performance</span></li>
           </ul>
         </div>
       </div>
@@ -1058,13 +1156,13 @@
             <div class="jsub">Define roles, scope &amp; goals</div>
           </div>
 
-          <div class="jfork" style="width:300px">
+          <div class="jfork jfork-2" style="width:300px">
             <div class="stem"></div>
             <div class="hbar" style="left:calc(50% - 75px);right:calc(50% - 75px);"></div>
             <div class="drop" style="left:calc(50% - 75px);"></div>
             <div class="drop" style="right:calc(50% - 75px);"></div>
           </div>
-          <div style="display:flex;gap:12px;width:300px;justify-content:center;">
+          <div class="jrow-2" style="display:flex;gap:12px;width:300px;justify-content:center;">
             <div class="jnode jn-teal" style="flex:1;"
               data-tip="🙋 Have an idea"
               data-side="left"
@@ -1080,7 +1178,7 @@
               <div class="jsub">Join a project</div>
             </div>
           </div>
-          <div class="jmerge" style="width:300px">
+          <div class="jmerge jmerge-2" style="width:300px">
             <div class="hbar" style="left:calc(50% - 75px);right:calc(50% - 75px);"></div>
             <div class="rise" style="left:calc(50% - 75px);height:18px;"></div>
             <div class="rise" style="right:calc(50% - 75px);height:18px;"></div>
@@ -1106,14 +1204,14 @@
             <div class="jsub">Milestones, tasks, progress logs</div>
           </div>
 
-          <div class="jfork" style="width:460px">
+          <div class="jfork jfork-3" style="width:460px">
             <div class="stem"></div>
             <div class="hbar" style="left:calc(50% - 115px);right:calc(50% - 115px);"></div>
             <div class="drop" style="left:calc(50% - 115px);"></div>
             <div class="drop" style="left:50%;transform:translateX(-50%);"></div>
             <div class="drop" style="right:calc(50% - 115px);"></div>
           </div>
-          <div style="display:flex;gap:10px;width:460px;justify-content:center;">
+          <div class="jrow-3" style="display:flex;gap:10px;width:460px;justify-content:center;">
             <div class="jnode jn-blue" style="flex:1;"
               data-tip="📈 Public timeline"
               data-side="left"
@@ -1136,7 +1234,7 @@
               <div class="jsub">Peer-endorsed</div>
             </div>
           </div>
-          <div class="jmerge" style="width:460px">
+          <div class="jmerge jmerge-3" style="width:460px">
             <div class="hbar" style="left:calc(50% - 115px);right:calc(50% - 115px);"></div>
             <div class="rise" style="left:calc(50% - 115px);height:18px;"></div>
             <div class="rise" style="left:50%;transform:translateX(-50%);height:18px;"></div>
@@ -1171,7 +1269,7 @@
             <div class="jsub">Your work already speaks for itself</div>
           </div>
 
-          <div class="jfork" style="width:300px">
+          <div class="jfork jfork-2" style="width:300px">
             <div class="stem"></div>
             <div class="hbar" style="left:calc(50% - 75px);right:calc(50% - 75px);"></div>
             <div class="drop" style="left:calc(50% - 75px);"></div>
@@ -1179,7 +1277,7 @@
           </div>
 
           <div class="jphase" style="margin-top:4px;">Outcome</div>
-          <div style="display:flex;gap:12px;width:300px;justify-content:center;">
+          <div class="jrow-2" style="display:flex;gap:12px;width:300px;justify-content:center;">
             <div class="jnode jn-green" style="flex:1;"
               data-tip="🎓 Internship"
               data-side="left"
@@ -1277,8 +1375,8 @@
     <div class="section-inner">
       <div class="diff-headline fade-up">
         <span class="eyebrow">What Makes Us Different</span>
-        <h2>Not just another platform.</h2>
-        <p>GitHub shows code. LinkedIn shows claims. GeekJoin shows the full picture — how people think, collaborate, and grow.</p>
+        <h2>Not just another dev platform.</h2>
+        <p>GitHub shows your commits. LinkedIn shows your claims. GeekJoin shows the full engineering picture — how you think, collaborate, ship, and grow as a developer.</p>
       </div>
       <div class="diff-grid fade-up">
         <div class="diff-card">
@@ -1309,9 +1407,9 @@
   <section id="waitlist">
     <div class="waitlist-inner fade-up">
       <span class="eyebrow" style="display:block;text-align:center">Early Access</span>
-      <h2>Start building.<br>Start getting noticed.</h2>
+      <h2>Start shipping software.<br>Start getting noticed.</h2>
       <p class="section-desc" style="margin:0 auto 48px">
-        GeekJoin is in development. Join the waitlist to be among the first on the platform and help shape what we build.
+        GeekJoin is in development. Join the waitlist to be among the first developers, designers &amp; tech students on the platform — and help shape what we build.
       </p>
       <div class="tally-wrapper">
         <iframe
@@ -1334,12 +1432,38 @@
   <!-- FOOTER -->
   <footer>
     <span class="footer-logo">Geek<span class="dot">Join</span></span>
-    <p>Build Together. Grow Together. Get Noticed.</p>
+    <p>Build Software Together. Grow as a Dev. Get Hired by Tech Companies.</p>
     <p style="margin-top:8px">&copy; 2026 GeekJoin. All rights reserved.</p>
   </footer>
 
 
   <script>
+    // Mobile hamburger menu toggle
+    (function() {
+      const burger = document.getElementById('navBurger');
+      const links = document.getElementById('navLinks');
+      const backdrop = document.getElementById('navBackdrop');
+      if (!burger || !links || !backdrop) return;
+
+      function setOpen(open) {
+        burger.classList.toggle('open', open);
+        links.classList.toggle('open', open);
+        backdrop.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+
+      burger.addEventListener('click', () => {
+        setOpen(!links.classList.contains('open'));
+      });
+      backdrop.addEventListener('click', () => setOpen(false));
+      links.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => setOpen(false));
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setOpen(false);
+      });
+    })();
+
     // Fade-in on scroll
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
