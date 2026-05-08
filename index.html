@@ -534,12 +534,22 @@
     .story-cell:hover img { transform: scale(1.05); filter: brightness(0.9) saturate(1.2); }
     .story-cell.span2 { grid-column: span 2; }
     .story-caption {
-      position: absolute; bottom: 16px; left: 16px;
-      font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.85);
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(8px);
-      padding: 5px 12px; border-radius: 99px;
-      border: 1px solid rgba(255,255,255,0.1);
+      position: absolute; bottom: 14px; left: 14px;
+      font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.92);
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+      padding: 8px 16px; border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.12);
+      max-width: calc(100% - 28px);
+      line-height: 1.35;
+    }
+    @media (max-width: 700px) {
+      .story-caption {
+        font-size: 0.72rem;
+        padding: 7px 14px;
+        bottom: 10px; left: 10px;
+        max-width: calc(100% - 20px);
+      }
     }
 
     /* ── DOCUMENTATION ── */
@@ -800,6 +810,13 @@
 </head>
 <body>
 
+  <!-- BACKDROP for mobile journey tooltip -->
+  <div id="jtip-backdrop" style="
+    display:none; position:fixed; inset:0; z-index:9998;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+    opacity: 0; transition: opacity 0.2s ease;
+  "></div>
+
   <!-- TOOLTIP — placed at top of body so getElementById finds it before any inline script -->
   <div id="jtip" style="
     display:none; position:fixed; z-index:9999;
@@ -809,9 +826,9 @@
     transition: opacity 0.18s, transform 0.18s;
     opacity:0; transform: scale(0.95);
   ">
-    <div id="jtip-title" style="font-size:13px;font-weight:600;color:#f5f5f7;margin-bottom:6px;display:flex;align-items:center;gap:7px;"></div>
+    <div id="jtip-title" style="font-size:13px;font-weight:600;color:#f5f5f7;margin-bottom:6px;display:flex;align-items:center;gap:7px;padding-right:18px;"></div>
     <div id="jtip-body" style="font-size:12px;color:#a1a1a6;line-height:1.6;"></div>
-    <div id="jtip-close" style="position:absolute;top:8px;right:10px;font-size:14px;color:rgba(255,255,255,0.3);cursor:pointer;line-height:1;">✕</div>
+    <div id="jtip-close" style="position:absolute;top:8px;right:10px;font-size:18px;color:rgba(255,255,255,0.55);cursor:pointer;line-height:1;display:none;width:24px;height:24px;text-align:center;">✕</div>
   </div>
 
   <!-- NAV -->
@@ -1247,9 +1264,61 @@
           .jmerge .rise { position:absolute; top:0; width:1px; background:rgba(255,255,255,0.1); }
           .jmerge .stem { position:absolute; top:0; left:50%; transform:translateX(-50%); width:1px; height:36px; background:rgba(255,255,255,0.1); }
           .jmerge .stem::after { content:''; position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; border-top:5px solid rgba(255,255,255,0.15); }
+
+          /* Mobile-only hint: tells touch users to tap a step */
+          .journey-hint {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(127,119,221,0.14), rgba(55,138,221,0.08));
+            border: 1px solid rgba(127,119,221,0.4);
+            border-radius: 99px;
+            padding: 8px 18px 8px 14px;
+            margin: 0 auto 18px;
+            width: fit-content;
+            font-size: 0.78rem;
+            color: #c4bff0;
+            font-weight: 600;
+            letter-spacing: 0.1px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(127,119,221,0.18);
+          }
+          .journey-hint::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(127,119,221,0.18) 50%, transparent 100%);
+            transform: translateX(-100%);
+            animation: hintShine 3.4s ease-in-out infinite;
+            pointer-events: none;
+          }
+          @keyframes hintShine {
+            0%   { transform: translateX(-100%); }
+            55%  { transform: translateX(100%); }
+            100% { transform: translateX(100%); }
+          }
+          .hint-finger {
+            font-size: 1.05rem;
+            display: inline-block;
+            animation: hintTap 1.6s ease-in-out infinite;
+            transform-origin: 70% 90%;
+          }
+          @keyframes hintTap {
+            0%, 55%, 100% { transform: translateY(0) scale(1); }
+            25%           { transform: translateY(3px) scale(0.92); }
+            40%           { transform: translateY(0) scale(1); }
+          }
+          @media (max-width: 700px) {
+            .journey-hint { display: inline-flex; }
+          }
         </style>
 
         <div style="display:flex;flex-direction:column;align-items:center;gap:0;padding:8px 0;">
+
+          <div class="journey-hint">
+            <span class="hint-finger">👆</span>
+            <span>Tap any step for details</span>
+          </div>
 
           <div class="jphase">Start</div>
           <div class="jnode jn-purple" style="min-width:220px"
@@ -1413,54 +1482,93 @@
 
   <script>
     (function() {
-      const tip    = document.getElementById('jtip');
-      const tipTitle = document.getElementById('jtip-title');
-      const tipBody  = document.getElementById('jtip-body');
-      const tipClose = document.getElementById('jtip-close');
-      let activeNode = null;
+      const tip       = document.getElementById('jtip');
+      const tipTitle  = document.getElementById('jtip-title');
+      const tipBody   = document.getElementById('jtip-body');
+      const tipClose  = document.getElementById('jtip-close');
+      const backdrop  = document.getElementById('jtip-backdrop');
+      let activeNode  = null;
+      let hideTimer   = null;
 
-      // Tooltip is purely informational on hover — make it ignore pointer events
-      // and hide the close button (no longer needed)
-      tip.style.pointerEvents = 'none';
-      if (tipClose) tipClose.style.display = 'none';
-
-      let hideTimer = null;
+      const mobileQuery = window.matchMedia('(max-width: 700px)');
+      const isMobile = () => mobileQuery.matches;
 
       document.querySelectorAll('.jnode[data-tip]').forEach(node => {
+        // Desktop: hover-driven, side-positioned
         node.addEventListener('mouseenter', function() {
-          if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-          if (activeNode === this) return;
-          activeNode = this;
-          tipTitle.innerHTML = this.dataset.tip;
-          tipBody.textContent = this.dataset.body;
-          tip.style.opacity = '0';
-          tip.style.transform = 'scale(0.95)';
-          tip.style.display = 'block';
-          positionTip(this);
-          requestAnimationFrame(() => {
-            tip.style.transition = 'opacity 0.18s, transform 0.18s';
-            tip.style.opacity = '1';
-            tip.style.transform = 'scale(1)';
-          });
+          if (isMobile()) return;
+          openTip(this, 'side');
         });
-
-        node.addEventListener('mouseleave', closeTip);
+        node.addEventListener('mouseleave', function() {
+          if (isMobile()) return;
+          closeTip();
+        });
+        // Mobile: click-driven, center-positioned modal
+        node.addEventListener('click', function(e) {
+          if (!isMobile()) return;
+          e.preventDefault();
+          if (activeNode === this) { closeTip(); return; }
+          openTip(this, 'center');
+        });
       });
+
+      tipClose.addEventListener('click', closeTip);
+      backdrop.addEventListener('click', closeTip);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && activeNode) closeTip();
+      });
+
+      function openTip(node, mode) {
+        if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+        activeNode = node;
+        tipTitle.innerHTML = node.dataset.tip;
+        tipBody.textContent = node.dataset.body;
+        tip.style.opacity = '0';
+        tip.style.transform = 'scale(0.95)';
+        tip.style.display = 'block';
+
+        if (mode === 'center') {
+          tipClose.style.display = 'block';
+          tip.style.pointerEvents = 'auto';
+          backdrop.style.display = 'block';
+          requestAnimationFrame(() => {
+            backdrop.style.opacity = '1';
+          });
+          positionCenter();
+        } else {
+          tipClose.style.display = 'none';
+          tip.style.pointerEvents = 'none';
+          backdrop.style.display = 'none';
+          positionSide(node);
+        }
+
+        requestAnimationFrame(() => {
+          tip.style.transition = 'opacity 0.18s, transform 0.18s';
+          tip.style.opacity = '1';
+          tip.style.transform = 'scale(1)';
+        });
+      }
 
       function closeTip() {
         tip.style.opacity = '0';
-        tip.style.transform = 'scale(0.95)';
+        // Preserve the centered translate if we were in center mode
+        const isCentered = tip.style.left === '50%';
+        tip.style.transform = isCentered ? 'translate(-50%, -50%) scale(0.95)' : 'scale(0.95)';
+        backdrop.style.opacity = '0';
         if (hideTimer) clearTimeout(hideTimer);
-        hideTimer = setTimeout(() => { tip.style.display = 'none'; }, 180);
+        hideTimer = setTimeout(() => {
+          tip.style.display = 'none';
+          backdrop.style.display = 'none';
+        }, 200);
         activeNode = null;
       }
 
-      function positionTip(node) {
+      function positionSide(node) {
         const rect = node.getBoundingClientRect();
-        const tw = 210;
-        const gap = 12;
+        const tw   = 210;
+        const gap  = 12;
         const side = node.dataset.side;
-        const th = tip.offsetHeight;
+        const th   = tip.offsetHeight;
 
         let x;
         if (side === 'left') {
@@ -1471,13 +1579,27 @@
           if (x + tw > window.innerWidth - 8) x = rect.left - tw - gap;
         }
 
-        // Vertically center on the node using actual tooltip height
         let y = rect.top + (rect.height / 2) - (th / 2);
         y = Math.max(8, Math.min(y, window.innerHeight - th - 8));
 
         tip.style.left  = x + 'px';
         tip.style.top   = y + 'px';
         tip.style.width = tw + 'px';
+        tip.style.maxWidth = '';
+      }
+
+      function positionCenter() {
+        // Mobile: anchor centered on the viewport, full-width minus margins
+        const margin = 24;
+        tip.style.width    = '';
+        tip.style.maxWidth = `calc(100vw - ${margin * 2}px)`;
+        tip.style.left     = '50%';
+        tip.style.top      = '50%';
+        tip.style.transform = 'translate(-50%, -50%) scale(0.95)';
+        // Override the entry transform target so the centered tooltip stays centered
+        requestAnimationFrame(() => {
+          tip.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
       }
     })();
   </script>
